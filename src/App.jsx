@@ -3,14 +3,28 @@ import AddProject from "./components/AddProject";
 import ProjectList from "./components/ProjectList";
 
 function App() {
-  const [isAddingProject, setIsAddingProject] = useState(false);
-  const handleAdd = () => {
-    setIsAddingProject(true);
+  const [projectsState, setProjectsState] = useState({
+    selectedProjectId: undefined,
+    projects: [],
+  });
+  const handleStartAddProject = () => {
+    setProjectsState((prevState) => {
+      return {
+        ...prevState,
+        selectedProjectId: null,
+      };
+    });
   };
+  let content;
+  if (projectsState.selectedProjectId === null) {
+    content = <NewProject />;
+  } else if (projectsState.selectedProjectId === undefined) {
+    content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
+  }
   return (
-    <main className="mt-8 flex">
-      <ProjectList handleAdd={handleAdd} isAddingProject={isAddingProject}/>
-      <AddProject handleAdd={handleAdd} isAddingProject={isAddingProject}/>
+    <main className="h-screen my-8 flex gap-8">
+      <ProjectsSidebar onStartAddProject={handleStartAddProject} />
+      {content}
     </main>
   );
 }
